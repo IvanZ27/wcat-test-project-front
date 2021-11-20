@@ -1,16 +1,50 @@
-.mail-container {
-  height: 90vh;
-  overflow: auto;
+.app__toolbar {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #512DA8;
+  opacity: 0.8;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+  padding: 0;
+}
+
+.app__toolbar_container {
+  width: 100%;
+  display: flex;
+  margin: 0 auto !important;
+  float: none !important;
+  padding: 0 30px 0 30px;
+  max-width: 1100px;
+  justify-content: space-between;
+}
+
+.app__toolbar_container-text {
+  left: 0;
+  color: white;
+}
+
+.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
+  background-color: #2196F3;
+  color: white;
+}
+
+.main__container {
+  padding: 0 30px 30px 30px;
+  max-width: 1100px;
+  margin: 15px auto !important;
+  float: none !important;
+}
+
+.mat-elevation-z8 {
+  box-shadow: 0 5px 5px -3px rgb(0 0 0 / 20%), 0 8px 11px 1px rgb(0 0 0 / 7%), 2px 2px 5px 0 rgb(0 0 0 / 12%);
 }
 
 table {
   width: 100%;
 }
-
-/*th.mat-header-cell {*/
-/*  background-color: #673AB7;*/
-/*  color: white;*/
-/*}*/
 
 th.mat-header-cell {
   color: #673AB7;

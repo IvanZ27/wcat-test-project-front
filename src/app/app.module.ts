@@ -10,7 +10,6 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import {MatButtonModule} from '@angular/material/button';
 
 
@@ -18,8 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
   declarations: [
     AppComponent,
     FilterTableComponent,
-    FilterModalComponent,
-    ToolbarComponent
+    FilterModalComponent
   ],
   imports: [
     BrowserModule,

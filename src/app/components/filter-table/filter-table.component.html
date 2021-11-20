@@ -1,4 +1,12 @@
-<div class="main-container mat-elevation-z8">
+<mat-toolbar class="app__toolbar">
+  <div class="app__toolbar_container">
+    <span class="app__toolbar_container-text">Wisercat filter</span>
+    <button mat-raised-button color="accent">Add filter</button>
+  </div>
+</mat-toolbar>
+
+<div class="main__container">
+<div class="main__container_table mat-elevation-z8">
   <table mat-table [dataSource]="allFilters">
 
     <!-- Position Column -->
@@ -33,4 +41,5 @@
     <tr mat-header-row [ngStyle]="{'width.%': 20}" *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+</div>
 </div>
