@@ -1,0 +1,25 @@
+.mail-container {
+  height: 90vh;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+/*th.mat-header-cell {*/
+/*  background-color: #673AB7;*/
+/*  color: white;*/
+/*}*/
+
+th.mat-header-cell {
+  color: #673AB7;
+}
+
+th.mat-header-cell {
+  padding: 0;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-color: #673AB7;
+}
+
