@@ -1,19 +1,28 @@
-.example-container .mat-form-field + .mat-form-field {
+.container .mat-form-field + .mat-form-field {
   margin-left: 8px;
 }
 
-.example-container .mat-form-field {
+.container .mat-form-field {
   width: 220px;
 }
 
-.example-container form {
+.container form {
   margin-bottom: 20px;
 }
 
-.example-container form > * {
+.container form > * {
   margin: 5px 0;
 }
 
-.example-container .mat-radio-button {
+.container .mat-radio-button {
   margin: 0 12px;
 }
+
+.invisible {
+  display: block;
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
+

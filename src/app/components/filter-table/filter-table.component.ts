@@ -9,6 +9,7 @@ import {ConditionModel} from "../../../models/ConditionModel";
 import {ConditionModelService} from "../../services/condition-model.service";
 import {FilterModalComponent} from "../filter-modal/filter-modal.component";
 import {MatDialog} from "@angular/material/dialog";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-filter-table',
@@ -75,19 +76,30 @@ export class FilterTableComponent implements OnInit {
   }
 
   onAdd(): void {
-    this.openDialog();
+    const filter = {filterName: '', criteriaId: 0, criteriaName: '', conditionId: 0, conditionName: '',
+      amountValue: 0, titleValue: '', dateValue: new Date(0), selection: 0};
+    this.openDialog(filter);
   }
 
-  addFiltersToFiltersTable(filtersToFiltersTable: FilterModel[]): void {
+  addFiltersToFiltersTable(filtersToFiltersTable: FilterModel): void {
     this.filterService.addFiltersToFiltersTable(filtersToFiltersTable).subscribe(newFilters => {
-      this.allFilters.push(...newFilters);
+      this.allFilters.push(newFilters);
+      console.log(this.allFilters)
+
       this.renderTable();
     });
   }
 
-  private openDialog(): void {
+  ngOnDestroy(): void {
+    this.matTable = undefined;
+    this.filterUpdateSubscription?.unsubscribe();
+    this.criteriaUpdateSubscription?.unsubscribe();
+    this.conditionUpdateSubscription?.unsubscribe();
+  }
+
+  private openDialog(filter: FilterModel): void {
     const dialogRef = this.dialog.open(FilterModalComponent, {
-      data: { employeeProjects: this.allFilters, conditions: this.conditions, criteria: this.criteria }
+      data: {filter, filters: this.allFilters, conditions: this.conditions, criteria: this.criteria }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -95,10 +107,4 @@ export class FilterTableComponent implements OnInit {
       }
     });
   }
-}
-
-export type FilterModalData = {
-  filters: FilterModel[];
-  criteria: CriteriaModel[];
-  conditions: ConditionModel[];
 }

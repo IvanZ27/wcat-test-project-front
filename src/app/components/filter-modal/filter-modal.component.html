@@ -4,37 +4,64 @@
 
 <mat-dialog-content class="dialog-content">
 
-  <div class="example-container">
-    <form [formGroup]="options">
+  <div class="container">
+    <form [formGroup]="addFilterForm">
 
-      <mat-form-field appearance="fill"
-                      [hideRequiredMarker]="hideRequiredControl.value"
-                      [floatLabel]="floatLabelControl.value">
-        <input matInput placeholder="Simple placeholder" required>
+      <mat-form-field appearance="outline">
+        <mat-label>Filter Name</mat-label>
+        <input matInput type="text" formControlName="filterName">
+        <mat-error>Filter Name cannot be empty</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" [floatLabel]="floatLabelControl.value">
-        <mat-label>Both a label and a placeholder</mat-label>
-        <input matInput placeholder="Simple placeholder">
-      </mat-form-field>
+<div>
+  <mat-form-field appearance="outline" floatLabel="never">
+    <mat-select placeholder="Criteria" formControlName="criteriaId" (selectionChange)="onChange($event)" >
 
-      <mat-form-field appearance="fill"
-                      [hideRequiredMarker]="hideRequiredControl.value"
-                      [floatLabel]="floatLabelControl.value">
-        <mat-select required>
-          <mat-option>-- None --</mat-option>
-          <mat-option value="option">Option</mat-option>
-        </mat-select>
-        <mat-label>label</mat-label>
-      </mat-form-field>
+      <mat-option *ngFor="let criterion of data.criteria"
+                  value="{{ criterion.id }}"> {{ criterion.criteriaText }}</mat-option>
+    </mat-select>
+    <mat-error>Criteria required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" floatLabel="never">
+    <mat-select placeholder="Condition" formControlName="conditionId">
+
+      <mat-option *ngFor="let condition of allConditions"
+                  value="{{ condition.id }}"> {{ condition.conditionText }}</mat-option>
+    </mat-select>
+    <mat-error>Criteria required</mat-error>
+  </mat-form-field>
+
+
+
+<!--  <mat-form-field *ngIf="!hideAmountValue" class="example-full-width" appearance="fill">-->
+<!--    <mat-label>Amount Value</mat-label>-->
+<!--    <input matInput placeholder="Amount value" formControlName="amountValue">-->
+<!--  </mat-form-field>-->
+
+<!--  <mat-form-field *ngIf="!hideTitleValue" class="example-full-width" appearance="fill">-->
+<!--    <mat-label>Title Value</mat-label>-->
+<!--    <input matInput placeholder="Title value" formControlName="titleValue">-->
+<!--  </mat-form-field>-->
+
+<!--  <mat-form-field *ngIf="!hideDateValue" appearance="fill">-->
+<!--    <mat-label>Date Value</mat-label>-->
+<!--    <input matInput [matDatepicker]="dp3" formControlName="dateValue">-->
+<!--    <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>-->
+<!--    <mat-datepicker #dp3 disabled="false" ></mat-datepicker>-->
+<!--  </mat-form-field>-->
+
+</div>
+
+
     </form>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
-  <!--  <button mat-button [ngClass]="isFormValid ? 'save-button' : 'save-button-disabled'"-->
-  <!--          [disabled]="!isFormValid" [mat-dialog-close]="saveFormValues()">Save-->
-  <!--  </button>-->
-  <button mat-button>Save</button>
+  <button mat-button [ngClass]="isFormValid ? 'save-button' : 'save-button-disabled'"
+          [disabled]="!isFormValid" [mat-dialog-close]="saveFormValues()">Save
+  </button>
+<!--  <button mat-button>Save</button>-->
 </mat-dialog-actions>
