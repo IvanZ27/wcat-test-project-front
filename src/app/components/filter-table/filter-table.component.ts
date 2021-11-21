@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatTable} from "@angular/material/table";
 import {FilterModel} from "../../../models/FilterModel";
 import {FilterModelService} from "../../services/filter-model.service";
 import {Subscription} from "rxjs";
@@ -7,6 +7,8 @@ import {CriteriaModelService} from "../../services/criteria-model.service";
 import {CriteriaModel} from "../../../models/CriteriaModel";
 import {ConditionModel} from "../../../models/ConditionModel";
 import {ConditionModelService} from "../../services/condition-model.service";
+import {FilterModalComponent} from "../filter-modal/filter-modal.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-filter-table',
@@ -16,8 +18,6 @@ import {ConditionModelService} from "../../services/condition-model.service";
 export class FilterTableComponent implements OnInit {
   @ViewChild(MatTable) matTable: MatTable<string[]> | undefined;
 
-  filter: MatTableDataSource<FilterModel> = new MatTableDataSource<FilterModel>();
-  // private readonly allFilters: FilterModel[] = [];
   allFilters: FilterModel[] = [];
   criteria: CriteriaModel[] = [];
   conditions: ConditionModel[] = [];
@@ -27,20 +27,18 @@ export class FilterTableComponent implements OnInit {
   private criteriaUpdateSubscription: Subscription | undefined;
   private conditionUpdateSubscription: Subscription | undefined;
 
-
+  displayedColumns = ['filterName', 'criteria', 'condition', 'value', 'selection'];
 
   constructor(private filterService: FilterModelService,
               private criteriaService: CriteriaModelService,
-              private conditionService: ConditionModelService) {
+              private conditionService: ConditionModelService,
+              public dialog: MatDialog) {
   }
-
 
   ngOnInit(): void {
     this.allFilters = this.filterService.getData();
     this.criteria = this.criteriaService.getData();
     this.conditions = this.conditionService.getData();
-
-
 
     this.filterUpdateSubscription = this.filterService.dataUpdateSignal.subscribe(x => {
       this.allFilters = this.filterService.allFilters;
@@ -53,17 +51,8 @@ export class FilterTableComponent implements OnInit {
 
     this.conditionUpdateSubscription = this.conditionService.dataUpdateSignal.subscribe(x => {
       this.conditions = this.conditionService.condition;
-      console.log(this.conditions)
     });
   }
-
-  // getAllFilters(): void {
-  //   this.filterService.getFilters().subscribe(
-  //     allFilters => {
-  //       allFilters.forEach(data => this.allFilters.push(data));
-  //       this.filter.data = this.allFilters;
-  //     });
-  // }
 
   renderTable(): void {
     this.matTable?.renderRows();
@@ -85,5 +74,31 @@ export class FilterTableComponent implements OnInit {
     return '';
   }
 
-  displayedColumns = ['filterName', 'criteria', 'condition', 'value', 'selection'];
+  onAdd(): void {
+    this.openDialog();
+  }
+
+  addFiltersToFiltersTable(filtersToFiltersTable: FilterModel[]): void {
+    this.filterService.addFiltersToFiltersTable(filtersToFiltersTable).subscribe(newFilters => {
+      this.allFilters.push(...newFilters);
+      this.renderTable();
+    });
+  }
+
+  private openDialog(): void {
+    const dialogRef = this.dialog.open(FilterModalComponent, {
+      data: { employeeProjects: this.allFilters, conditions: this.conditions, criteria: this.criteria }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.addFiltersToFiltersTable(result);
+      }
+    });
+  }
+}
+
+export type FilterModalData = {
+  filters: FilterModel[];
+  criteria: CriteriaModel[];
+  conditions: ConditionModel[];
 }
