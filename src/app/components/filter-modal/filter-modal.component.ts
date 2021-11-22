@@ -1,6 +1,6 @@
 import {Component, Inject, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {FilterModel} from "../../../models/FilterModel";
 import {CriteriaModel} from "../../../models/CriteriaModel";
 import {ConditionModel} from "../../../models/ConditionModel";
@@ -36,7 +36,7 @@ export class FilterModalComponent implements OnInit, OnDestroy {
   isFormValid = false;
   valueChangesSubscription: Subscription | undefined;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {
+  constructor(private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA, ) public data: {
     filter: FilterModel,
     criteria: CriteriaModel[],
     conditions: ConditionModel[]
@@ -52,6 +52,7 @@ export class FilterModalComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+
     this.valueChangesSubscription = this.addFilterForm.valueChanges.subscribe(x => {
       this.validateForm();
     });
@@ -123,13 +124,25 @@ export class FilterModalComponent implements OnInit, OnDestroy {
 
   onAddFilterLine(): void {
     this.formArrayControls.push(this.createEmailFormGroup());
+    // this.formArrayControls.push(new FormGroup({
+    //   criteriaId: new FormControl(this.defaultAmount),
+    //   criteriaName: new FormControl(this.data.filter.criteriaName),
+    //   conditionId: new FormControl(this.data.filter.conditionId),
+    //   conditionName: new FormControl(this.data.filter.conditionName),
+    //   amountValue: new FormControl(666),
+    //   titleValue: new FormControl(this.data.filter.titleValue),
+    //   dateValue: new FormControl(this.data.filter.dateValue)
+    // }));
+
     this.isFormValid = false;
     this.buildNewForm();
   }
 
-  // onRemoveFilterLine(i: number): void {
-  //   this.addFilterForm.removeControl(i);
-  // }
+  public onRemoveFilterLine(i: number) {
+    if(this.formArrayControls.length > 1) {
+      this.formArrayControls.splice(i, 1);
+    }
+  }
 
   private buildNewForm(): void {
     this.valueChangesSubscription?.unsubscribe();
