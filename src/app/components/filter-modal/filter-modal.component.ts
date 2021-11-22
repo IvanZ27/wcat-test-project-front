@@ -22,15 +22,7 @@ export class FilterModalComponent implements OnInit, OnDestroy {
   allConditions: ConditionModel[] = [];
 
   formArray = new FormArray([
-    new FormGroup({
-      criteriaId: new FormControl(this.data.filter.criteriaId),
-      criteriaName: new FormControl(this.data.filter.criteriaName),
-      conditionId: new FormControl(this.data.filter.conditionId),
-      conditionName: new FormControl(this.data.filter.conditionName),
-      amountValue: new FormControl(this.data.filter.amountValue),
-      titleValue: new FormControl(this.data.filter.titleValue),
-      dateValue: new FormControl(this.data.filter.dateValue),
-    })
+    this.createEmailFormGroup()
   ]);
   formArrayControls: FormGroup[] = (this.formArray.controls as FormGroup[]);
 
@@ -64,32 +56,25 @@ export class FilterModalComponent implements OnInit, OnDestroy {
       this.validateForm();
     });
     this.allConditions = this.data.conditions.filter(activity => (activity.criteriaId == 1));
-
-    // this.data.filter.join(':');
-
   }
 
   ngOnDestroy(): void {
     this.valueChangesSubscription?.unsubscribe();
   }
 
-  // saveFormValues(): FilterModel | undefined {
-  //   this.validateForm();
-  //   if (!this.isFormValid) {
-  //     return undefined;
-  //   }
-  //   this.data.filter.filterName = this.addFilterForm.controls['filterName'].value,
-  //     this.data.filter.criteriaId = this.addFilterForm.controls['criteriaId'].value,
-  //     this.data.filter.conditionId = this.addFilterForm.controls['conditionId'].value,
-  //     this.data.filter.amountValue = this.addFilterForm.controls['amountValue'].value,
-  //     this.data.filter.titleValue = this.addFilterForm.controls['titleValue'].value,
-  //     this.data.filter.dateValue = this.addFilterForm.controls['dateValue'].value,
-  //     this.data.filter.selection = this.addFilterForm.controls['selection'].value,
-  //     this.data.filter.criteriaName = '',
-  //     this.data.filter.conditionName = '';
-  //   console.log(this.data.filter)
-  //   return this.data.filter;
-  // }
+  validateForm(): number[] {
+    this.isFormValid = !this.addFilterForm.invalid;
+    if (!this.isFormValid) {
+      return [];
+    }
+
+    const filterName = FilterModalComponent.filterNameFromFormGroup(this.addFilterForm);
+    if (filterName == undefined) {
+      this.isFormValid = false;
+      return [];
+    }
+    return [];
+  }
 
   saveFormValues(): FilterModel[] {
     this.validateForm();
@@ -109,7 +94,6 @@ export class FilterModalComponent implements OnInit, OnDestroy {
       const criteriaName = FilterModalComponent.criteriaNameFromFormGroup(this.formArrayControls[i]);
       const conditionName = FilterModalComponent.conditionNameFromFormGroup(this.formArrayControls[i]);
 
-
       const filterModel: FilterModel = {
         filterName, criteriaId, criteriaName, conditionId,
         conditionName, amountValue, titleValue, dateValue, selection
@@ -125,19 +109,43 @@ export class FilterModalComponent implements OnInit, OnDestroy {
     this.allConditions = this.data.conditions.filter(activity => (activity.criteriaId == optionText));
   }
 
-  validateForm(): number[] {
-    this.isFormValid = !this.addFilterForm.invalid;
-    if (!this.isFormValid) {
-      return [];
-    }
-
-    const employeeId = FilterModalComponent.filterNameFromFormGroup(this.addFilterForm);
-    if (employeeId == undefined) {
-      this.isFormValid = false;
-      return [];
-    }
-    return [];
+  private createEmailFormGroup(): FormGroup {
+    return new FormGroup({
+      criteriaId: new FormControl(this.data.filter.criteriaId),
+      criteriaName: new FormControl(this.data.filter.criteriaName),
+      conditionId: new FormControl(this.data.filter.conditionId),
+      conditionName: new FormControl(this.data.filter.conditionName),
+      amountValue: new FormControl(this.data.filter.amountValue),
+      titleValue: new FormControl(this.data.filter.titleValue),
+      dateValue: new FormControl(this.data.filter.dateValue)
+    })
   }
+
+  onAddFilterLine(): void {
+    this.formArrayControls.push(this.createEmailFormGroup());
+    this.isFormValid = false;
+    this.buildNewForm();
+  }
+
+  // onRemoveFilterLine(i: number): void {
+  //   this.addFilterForm.removeControl(i);
+  // }
+
+  private buildNewForm(): void {
+    this.valueChangesSubscription?.unsubscribe();
+    this.formArray = new FormArray(this.formArray.controls);
+    this.formArrayControls = (this.formArray.controls as FormGroup[]);
+
+    this.addFilterForm = new FormGroup({
+      filterName: this.filterNameControl,
+      formArray: this.formArray,
+      selection: new FormControl(this.data.filter.selection)
+    });
+    this.valueChangesSubscription = this.addFilterForm.valueChanges.subscribe(x => {
+      this.validateForm();
+    });
+  }
+
 
   private static filterNameFromFormGroup(control: FormGroup): string {
     return control.controls['filterName'].value;

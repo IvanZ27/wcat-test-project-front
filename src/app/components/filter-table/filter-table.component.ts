@@ -9,7 +9,7 @@ import {ConditionModel} from "../../../models/ConditionModel";
 import {ConditionModelService} from "../../services/condition-model.service";
 import {FilterModalComponent} from "../filter-modal/filter-modal.component";
 import {MatDialog} from "@angular/material/dialog";
-import * as moment from 'moment';
+import * as moment from "moment";
 
 
 @Component({
@@ -109,8 +109,13 @@ export class FilterTableComponent implements OnInit {
     });
   }
 
-  noComma(date: Date) {
+  normalDate(date: Date){
+    if(date == null){
+      return null;
+    }
+    return moment(date).format('YYYY.MM.DD');
   }
+
 }
 
 

@@ -14,8 +14,6 @@
         </mat-form-field>
       </div>
 
-
-
         <div *ngFor="let group of formArray.controls;let i = index" [formGroup]=formArrayControls[i]>
           <mat-form-field appearance="outline" floatLabel="never">
             <mat-select [(ngModel)]="defaultAmount" placeholder="Criteria" formControlName="criteriaId"
@@ -54,13 +52,13 @@
             <mat-datepicker #dp3 disabled="false"></mat-datepicker>
           </mat-form-field>
 
-          <button class="button__padding plus-button" mat-mini-fab color="accent" aria-label="Add new line">
-            <!--                (click)="onAddFilterLine()">-->
+          <button class="button__padding plus-button" mat-mini-fab color="accent" aria-label="Add new line"
+                            (click)="onAddFilterLine()">
             <mat-icon>add</mat-icon>
           </button>
 
           <button class="button__padding" mat-mini-fab color="accent" aria-label="Add new line">
-            <!--                (click)="onRemoveFilterLine()">-->
+<!--                            (click)="onRemoveFilterLine()">-->
             <mat-icon>remove</mat-icon>
           </button>
         </div>
@@ -81,5 +79,5 @@
   <button mat-button [ngClass]="isFormValid ? 'save-button' : 'save-button-disabled'"
           [disabled]="!isFormValid" [mat-dialog-close]="saveFormValues()">Save
   </button>
-  <!--  <button mat-button>Save</button>-->
+<!--  <button mat-button [mat-dialog-close]="saveFormValues()">Save</button>-->
 </mat-dialog-actions>

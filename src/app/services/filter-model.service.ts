@@ -88,7 +88,11 @@ export class FilterModelService {
       selection: rawFilters.selection
     };
   }
-  // addFiltersToFiltersTable(filterDTO: FilterModel | undefined): Observable<FilterModel> {
-  //   return this.http.post<FilterModel>(filterUrl, filterDTO, httpOptions);
-  // }
+}
+
+export function dateToNumberArray(date?: Date): number[] {
+  if (!date) {
+    return [];
+  }
+  return [date.getFullYear(), date.getMonth() + 1, date.getDate()];
 }
