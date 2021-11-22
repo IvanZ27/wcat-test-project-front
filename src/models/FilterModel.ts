@@ -18,8 +18,8 @@ export type FilterModelData = {
   criteriaName: string,
   conditionId: number,
   conditionName: string,
-  amountValue: number,
-  titleValue: string,
-  dateValue: Date,
+  amountValue?: number,
+  titleValue?: string,
+  dateValue?: Date,
   selection: number
 }

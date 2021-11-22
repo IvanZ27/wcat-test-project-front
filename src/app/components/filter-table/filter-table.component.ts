@@ -82,9 +82,9 @@ export class FilterTableComponent implements OnInit {
     this.openDialog(filter);
   }
 
-  addFiltersToFiltersTable(filtersToFiltersTable: FilterModel): void {
+  addFiltersToFiltersTable(filtersToFiltersTable: FilterModel[]): void {
     this.filterService.addFiltersToFiltersTable(filtersToFiltersTable).subscribe(newFilters => {
-      this.allFilters.push(newFilters);
+      this.allFilters.push(...newFilters);
       console.log(this.allFilters)
 
       this.renderTable();
