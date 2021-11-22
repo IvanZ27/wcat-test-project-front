@@ -18,9 +18,9 @@ import {MatOption} from "@angular/material/core";
 
 export class FilterModalComponent implements OnInit, OnDestroy {
 
-  hideAmountValue = false;
-  hideTitleValue = false;
-  hideDateValue = false;
+
+  allConditions: ConditionModel[] = [];
+
 
   addFilterForm = new FormGroup({
     filterName: new FormControl(this.data.filter.filterName, Validators.required),
@@ -37,13 +37,29 @@ export class FilterModalComponent implements OnInit, OnDestroy {
   isFormValid = false;
   valueChangesSubscription: Subscription | undefined;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { filter: FilterModel, criteria: CriteriaModel[], conditions: ConditionModel[] }) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {
+    filter: FilterModel,
+    criteria: CriteriaModel[],
+    conditions: ConditionModel[]
+  }) {
   }
+
+  selectList: SelectModel[] = [
+    {"id": 1, "selectText": "Select 1"},
+    {"id": 2, "selectText": "Select 2"},
+    {"id": 3, "selectText": "Select 3"}
+  ];
+  defaultAmount: number = 1;
+
 
   ngOnInit(): void {
     this.valueChangesSubscription = this.addFilterForm.valueChanges.subscribe(x => {
       this.validateForm();
     });
+    this.allConditions = this.data.conditions.filter(activity => (activity.criteriaId == 1));
+
+    // this.data.filter.join(':');
+
   }
 
   ngOnDestroy(): void {
@@ -57,24 +73,16 @@ export class FilterModalComponent implements OnInit, OnDestroy {
     }
     this.data.filter.filterName = this.addFilterForm.controls['filterName'].value,
       this.data.filter.criteriaId = this.addFilterForm.controls['criteriaId'].value,
-      // this.filter.criteriaName = this.addFilterForm.controls['filterName'].value,
       this.data.filter.conditionId = this.addFilterForm.controls['conditionId'].value,
-      // this.filter.conditionName = this.addFilterForm.controls['filterName'].value,
-      // this.filter.amountValue = this.addFilterForm.controls['filterName'].value,
-      // this.filter.titleValue = this.addFilterForm.controls['filterName'].value,
-      // this.filter.dateValue = this.addFilterForm.controls['filterName'].value,
-      // this.filter.selection = this.addFilterForm.controls['filterName'].value;
-      // this.data.filter.criteriaId = 1,
+      this.data.filter.amountValue = this.addFilterForm.controls['amountValue'].value,
+      this.data.filter.titleValue = this.addFilterForm.controls['titleValue'].value,
+      this.data.filter.dateValue = this.addFilterForm.controls['dateValue'].value,
+      this.data.filter.selection = this.addFilterForm.controls['selection'].value,
       this.data.filter.criteriaName = '',
-      this.data.filter.conditionName = '',
-      this.data.filter.amountValue = 245,
-      this.data.filter.titleValue = '',
-      this.data.filter.dateValue = new Date(''),
-      this.data.filter.selection = 1;
+      this.data.filter.conditionName = '';
+    console.log(this.data.filter)
     return this.data.filter;
   }
-
-  allConditions: any = [];
 
   onChange(ev: MatSelectChange) {
     let optionText = (ev.source.selected as MatOption).value;
@@ -84,4 +92,10 @@ export class FilterModalComponent implements OnInit, OnDestroy {
   validateForm(): void {
     this.isFormValid = !this.addFilterForm.invalid;
   }
+}
+
+
+export interface SelectModel {
+  id?: number,
+  selectText: string
 }

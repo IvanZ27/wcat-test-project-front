@@ -9,7 +9,8 @@ import {ConditionModel} from "../../../models/ConditionModel";
 import {ConditionModelService} from "../../services/condition-model.service";
 import {FilterModalComponent} from "../filter-modal/filter-modal.component";
 import {MatDialog} from "@angular/material/dialog";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-filter-table',
@@ -43,6 +44,7 @@ export class FilterTableComponent implements OnInit {
 
     this.filterUpdateSubscription = this.filterService.dataUpdateSignal.subscribe(x => {
       this.allFilters = this.filterService.allFilters;
+      console.log(this.allFilters)
       this.renderTable();
     });
 
@@ -76,8 +78,7 @@ export class FilterTableComponent implements OnInit {
   }
 
   onAdd(): void {
-    const filter = {filterName: '', criteriaId: 0, criteriaName: '', conditionId: 0, conditionName: '',
-      amountValue: 0, titleValue: '', dateValue: new Date(0), selection: 0};
+    const filter = {filterName: '', criteriaId: 0, criteriaName: '', conditionId: 0, conditionName: '', selection: 0};
     this.openDialog(filter);
   }
 
@@ -99,7 +100,7 @@ export class FilterTableComponent implements OnInit {
 
   private openDialog(filter: FilterModel): void {
     const dialogRef = this.dialog.open(FilterModalComponent, {
-      data: {filter, filters: this.allFilters, conditions: this.conditions, criteria: this.criteria }
+      data: {filter, filters: this.allFilters, conditions: this.conditions, criteria: this.criteria}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -107,4 +108,9 @@ export class FilterTableComponent implements OnInit {
       }
     });
   }
+
+  noComma(date: Date) {
+  }
 }
+
+

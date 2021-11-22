@@ -13,27 +13,8 @@ body {
 
 .mat-dialog-container{
   max-width: 100%;
-  min-height: 385px !important;
+  min-height: 395px !important;
   max-height: 90vh !important;
   resize: vertical;
 }
-
-/*.cdk-overlay-pane {*/
-/*  !* width: unset !important; *!*/
-/*  width: 70% !important;*/
-/*  min-width: 70% !important;*/
-/*  height: 60% !important;*/
-/*  !* height: 30% !important; *!*/
-/*  min-height: 60% !important;*/
-/*  max-width: 100% !important;*/
-/*  !* max-height: 100% !important; *!*/
-/*}*/
-
-/*.mat-dialog-container {*/
-/*  width: 30%;*/
-/*  min-width: 100% !important;*/
-/*  !* min-height: 60% !important; *!*/
-/*  max-height: 100% !important;*/
-/*  resize: vertical;*/
-/*}*/
 
