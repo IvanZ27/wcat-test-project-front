@@ -17,6 +17,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatRadioModule} from "@angular/material/radio";
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -25,26 +26,27 @@ import {MatRadioModule} from "@angular/material/radio";
     FilterTableComponent,
     FilterModalComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatTableModule,
-    BrowserAnimationsModule,
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    MatNativeDateModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatRadioModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        MatTableModule,
+        BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        MatNativeDateModule,
+        ReactiveFormsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatRadioModule,
+        MatIconModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

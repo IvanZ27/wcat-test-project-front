@@ -6,61 +6,70 @@
 
   <div class="container">
     <form [formGroup]="addFilterForm">
-
-      <mat-form-field appearance="outline">
-        <mat-label>Filter Name</mat-label>
-        <input matInput type="text" formControlName="filterName">
-        <mat-error>Filter Name cannot be empty</mat-error>
-      </mat-form-field>
-
-  <div>
-
       <div>
-        <mat-form-field appearance="outline" floatLabel="never">
-          <mat-select [(ngModel)]="defaultAmount" placeholder="Criteria" formControlName="criteriaId"
-                      (selectionChange)="onChange($event)">
-
-            <mat-option *ngFor="let criterion of data.criteria"
-                        [value]="criterion.id"> {{ criterion.criteriaText }}</mat-option>
-          </mat-select>
-          <mat-error>Criteria required</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" floatLabel="never">
-          <mat-select placeholder="Condition" formControlName="conditionId">
-
-            <mat-option *ngFor="let condition of allConditions"
-                        value="{{ condition.id }}"> {{ condition.conditionText }}</mat-option>
-          </mat-select>
-          <mat-error>Criteria required</mat-error>
-        </mat-form-field>
-
-
-        <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 1 }" class="example-full-width" appearance="outline">
-          <mat-label>Amount Value</mat-label>
-          <input matInput placeholder="Amount value" formControlName="amountValue">
-        </mat-form-field>
-
-        <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 2 }" class="example-full-width" appearance="outline">
-          <mat-label>Title Value</mat-label>
-          <input matInput placeholder="Title value" formControlName="titleValue">
-        </mat-form-field>
-
-        <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 3 }" appearance="outline">
-          <mat-label>Date Value</mat-label>
-          <input matInput [matDatepicker]="dp3" formControlName="dateValue">
-          <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
-          <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+        <mat-form-field appearance="outline">
+          <mat-label>Filter Name</mat-label>
+          <input matInput type="text" formControlName="filterName">
+          <mat-error>Filter Name cannot be empty</mat-error>
         </mat-form-field>
       </div>
 
-    <mat-radio-group formControlName="selection">
-      <mat-radio-button  *ngFor="let selectItem of selectList"
-                        [value]="selectItem.id"> {{ selectItem.selectText }}
-      </mat-radio-button>
-    </mat-radio-group>
 
-  </div>
+
+        <div>
+          <mat-form-field appearance="outline" floatLabel="never">
+            <mat-select [(ngModel)]="defaultAmount" placeholder="Criteria" formControlName="criteriaId"
+                        (selectionChange)="onChange($event)">
+
+              <mat-option *ngFor="let criterion of data.criteria"
+                          [value]="criterion.id"> {{ criterion.criteriaText }}</mat-option>
+            </mat-select>
+            <mat-error>Criteria required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" floatLabel="never">
+            <mat-select placeholder="Condition" formControlName="conditionId">
+
+              <mat-option *ngFor="let condition of allConditions"
+                          value="{{ condition.id }}"> {{ condition.conditionText }}</mat-option>
+            </mat-select>
+            <mat-error>Criteria required</mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 1 }" class="example-full-width" appearance="outline">
+            <mat-label>Amount Value</mat-label>
+            <input matInput placeholder="Amount value" formControlName="amountValue">
+          </mat-form-field>
+
+          <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 2 }" class="example-full-width" appearance="outline">
+            <mat-label>Title Value</mat-label>
+            <input matInput placeholder="Title value" formControlName="titleValue">
+          </mat-form-field>
+
+          <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 3 }" appearance="outline">
+            <mat-label>Date Value</mat-label>
+            <input matInput [matDatepicker]="dp3" formControlName="dateValue">
+            <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+            <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+          </mat-form-field>
+
+          <button class="button__padding plus-button" mat-mini-fab color="accent" aria-label="Add new line">
+            <!--                (click)="onAddFilterLine()">-->
+            <mat-icon>add</mat-icon>
+          </button>
+
+          <button class="button__padding" mat-mini-fab color="accent" aria-label="Add new line">
+            <!--                (click)="onRemoveFilterLine()">-->
+            <mat-icon>remove</mat-icon>
+          </button>
+        </div>
+
+        <mat-radio-group formControlName="selection">
+          <mat-radio-button *ngFor="let selectItem of selectList"
+                            [value]="selectItem.id"> {{ selectItem.selectText }}
+          </mat-radio-button>
+        </mat-radio-group>
 
 
     </form>
