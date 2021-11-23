@@ -1,31 +1,47 @@
-import {Component, Inject, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {FilterModel} from "../../../models/FilterModel";
 import {CriteriaModel} from "../../../models/CriteriaModel";
 import {ConditionModel} from "../../../models/ConditionModel";
 import {Subscription} from "rxjs";
-import {MatSelectChange} from "@angular/material/select";
-import {MatOption} from "@angular/material/core";
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from "@angular/material/core";
+import {
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+  MAT_MOMENT_DATE_FORMATS,
+  MomentDateAdapter
+} from "@angular/material-moment-adapter";
 
 
 @Component({
   selector: 'app-filter-modal',
   templateUrl: './filter-modal.component.html',
-  styleUrls: ['./filter-modal.component.css']
+  styleUrls: ['./filter-modal.component.css'],
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS}
+  ]
 })
 
-
 export class FilterModalComponent implements OnInit, OnDestroy {
+
+  isValidMoment: boolean = false;
+
+  defaultAmount: number = 1;
+
+  selectList: SelectModel[] = [
+    {"id": 1, "selectText": "Select 1"},
+    {"id": 2, "selectText": "Select 2"},
+    {"id": 3, "selectText": "Select 3"}
+  ];
 
   private readonly filterNameControl = new FormControl(this.data.filter.filterName, Validators.required);
   allConditions: ConditionModel[] = [];
 
   formArray = new FormArray([
-    this.createEmailFormGroup()
+    this.createFilterFormGroup()
   ]);
   formArrayControls: FormGroup[] = (this.formArray.controls as FormGroup[]);
-
 
   addFilterForm = new FormGroup({
     filterName: this.filterNameControl,
@@ -36,23 +52,14 @@ export class FilterModalComponent implements OnInit, OnDestroy {
   isFormValid = false;
   valueChangesSubscription: Subscription | undefined;
 
-  constructor(private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA, ) public data: {
+  constructor(@Inject(MAT_DIALOG_DATA,) public data: {
     filter: FilterModel,
     criteria: CriteriaModel[],
     conditions: ConditionModel[]
   }) {
   }
 
-  selectList: SelectModel[] = [
-    {"id": 1, "selectText": "Select 1"},
-    {"id": 2, "selectText": "Select 2"},
-    {"id": 3, "selectText": "Select 3"}
-  ];
-  defaultAmount: number = 1;
-
-
   ngOnInit(): void {
-
     this.valueChangesSubscription = this.addFilterForm.valueChanges.subscribe(x => {
       this.validateForm();
     });
@@ -75,6 +82,56 @@ export class FilterModalComponent implements OnInit, OnDestroy {
       return [];
     }
     return [];
+  }
+
+  private createFilterFormGroup(): FormGroup {
+    return new FormGroup({
+      criteriaId: new FormControl(this.defaultAmount),
+      criteriaName: new FormControl(this.data.filter.criteriaName),
+      conditionId: new FormControl(this.data.filter.conditionId),
+      conditionName: new FormControl(this.data.filter.conditionName),
+      amountValue: new FormControl(this.data.filter.amountValue),
+      titleValue: new FormControl(this.data.filter.titleValue),
+      dateValue: new FormControl(this.data.filter.dateValue)
+    })
+  }
+
+  onAddFilterLine(): void {
+    this.formArrayControls.push(this.createFilterFormGroup());
+    this.isFormValid = false;
+    this.buildNewForm();
+  }
+
+  getConditions(i: number): any {
+    let conditions: ConditionModel[] = [];
+    conditions = this.data.conditions.filter(activity => (activity.criteriaId == this.formArrayControls[i].get('criteriaId')?.value));
+    return conditions;
+  }
+
+  valueCondition(i: number): number {
+    let valueCondition: number = this.formArrayControls[i].get('criteriaId')?.value;
+    return valueCondition;
+  }
+
+  public onRemoveFilterLine(i: number) {
+    if (this.formArrayControls.length > 1) {
+      this.formArrayControls.splice(i, 1);
+    }
+  }
+
+  private buildNewForm(): void {
+    this.valueChangesSubscription?.unsubscribe();
+    this.formArray = new FormArray(this.formArray.controls);
+    this.formArrayControls = (this.formArray.controls as FormGroup[]);
+
+    this.addFilterForm = new FormGroup({
+      filterName: this.filterNameControl,
+      formArray: this.formArray,
+      selection: new FormControl(this.data.filter.selection)
+    });
+    this.valueChangesSubscription = this.addFilterForm.valueChanges.subscribe(x => {
+      this.validateForm();
+    });
   }
 
   saveFormValues(): FilterModel[] {
@@ -104,61 +161,6 @@ export class FilterModalComponent implements OnInit, OnDestroy {
     console.log("filterModels: " + JSON.stringify(filterModels))
     return filterModels;
   }
-
-  onChange(ev: MatSelectChange) {
-    let optionText = (ev.source.selected as MatOption).value;
-    this.allConditions = this.data.conditions.filter(activity => (activity.criteriaId == optionText));
-  }
-
-  private createEmailFormGroup(): FormGroup {
-    return new FormGroup({
-      criteriaId: new FormControl(this.data.filter.criteriaId),
-      criteriaName: new FormControl(this.data.filter.criteriaName),
-      conditionId: new FormControl(this.data.filter.conditionId),
-      conditionName: new FormControl(this.data.filter.conditionName),
-      amountValue: new FormControl(this.data.filter.amountValue),
-      titleValue: new FormControl(this.data.filter.titleValue),
-      dateValue: new FormControl(this.data.filter.dateValue)
-    })
-  }
-
-  onAddFilterLine(): void {
-    this.formArrayControls.push(this.createEmailFormGroup());
-    // this.formArrayControls.push(new FormGroup({
-    //   criteriaId: new FormControl(this.defaultAmount),
-    //   criteriaName: new FormControl(this.data.filter.criteriaName),
-    //   conditionId: new FormControl(this.data.filter.conditionId),
-    //   conditionName: new FormControl(this.data.filter.conditionName),
-    //   amountValue: new FormControl(666),
-    //   titleValue: new FormControl(this.data.filter.titleValue),
-    //   dateValue: new FormControl(this.data.filter.dateValue)
-    // }));
-
-    this.isFormValid = false;
-    this.buildNewForm();
-  }
-
-  public onRemoveFilterLine(i: number) {
-    if(this.formArrayControls.length > 1) {
-      this.formArrayControls.splice(i, 1);
-    }
-  }
-
-  private buildNewForm(): void {
-    this.valueChangesSubscription?.unsubscribe();
-    this.formArray = new FormArray(this.formArray.controls);
-    this.formArrayControls = (this.formArray.controls as FormGroup[]);
-
-    this.addFilterForm = new FormGroup({
-      filterName: this.filterNameControl,
-      formArray: this.formArray,
-      selection: new FormControl(this.data.filter.selection)
-    });
-    this.valueChangesSubscription = this.addFilterForm.valueChanges.subscribe(x => {
-      this.validateForm();
-    });
-  }
-
 
   private static filterNameFromFormGroup(control: FormGroup): string {
     return control.controls['filterName'].value;
@@ -196,9 +198,7 @@ export class FilterModalComponent implements OnInit, OnDestroy {
     return control.controls['conditionName'].value;
   }
 
-
 }
-
 
 export interface SelectModel {
   id?: number,

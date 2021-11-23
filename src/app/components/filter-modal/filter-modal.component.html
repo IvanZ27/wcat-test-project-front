@@ -1,7 +1,6 @@
 <h1 mat-dialog-title>Add Filter</h1>
 <hr>
 <br>
-
 <mat-dialog-content class="dialog-content">
 
   <div class="container">
@@ -16,8 +15,8 @@
 
         <div *ngFor="let group of formArray.controls;let i = index" [formGroup]=formArrayControls[i]>
           <mat-form-field appearance="outline" floatLabel="never">
-            <mat-select [(ngModel)]="defaultAmount" placeholder="Criteria" formControlName="criteriaId"
-                        (selectionChange)="onChange($event)">
+            <mat-select placeholder="Criteria" formControlName="criteriaId"
+                       >
 
               <mat-option *ngFor="let criterion of data.criteria"
                           [value]="criterion.id"> {{ criterion.criteriaText }}</mat-option>
@@ -28,24 +27,24 @@
           <mat-form-field appearance="outline" floatLabel="never">
             <mat-select placeholder="Condition" formControlName="conditionId">
 
-              <mat-option *ngFor="let condition of allConditions"
+              <mat-option *ngFor="let condition of getConditions(i)"
                           value="{{ condition.id }}"> {{ condition.conditionText }}</mat-option>
             </mat-select>
             <mat-error>Criteria required</mat-error>
           </mat-form-field>
 
 
-          <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 1 }" class="example-full-width" appearance="outline">
+          <mat-form-field *ngIf="valueCondition(i) == 1" class="example-full-width" appearance="outline">
             <mat-label>Amount Value</mat-label>
             <input matInput placeholder="Amount value" formControlName="amountValue">
           </mat-form-field>
 
-          <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 2 }" class="example-full-width" appearance="outline">
+          <mat-form-field *ngIf="valueCondition(i) == 2" class="example-full-width" appearance="outline">
             <mat-label>Title Value</mat-label>
             <input matInput placeholder="Title value" formControlName="titleValue">
           </mat-form-field>
 
-          <mat-form-field [ngClass]="{ 'hidden': defaultAmount != 3 }" appearance="outline">
+          <mat-form-field *ngIf="valueCondition(i) == 3" appearance="outline">
             <mat-label>Date Value</mat-label>
             <input matInput [matDatepicker]="dp3" formControlName="dateValue">
             <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
@@ -79,5 +78,4 @@
   <button mat-button [ngClass]="isFormValid ? 'save-button' : 'save-button-disabled'"
           [disabled]="!isFormValid" [mat-dialog-close]="saveFormValues()">Save
   </button>
-<!--  <button mat-button [mat-dialog-close]="saveFormValues()">Save</button>-->
 </mat-dialog-actions>

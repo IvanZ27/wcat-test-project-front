@@ -24,7 +24,6 @@ export class FilterTableComponent implements OnInit {
   criteria: CriteriaModel[] = [];
   conditions: ConditionModel[] = [];
 
-
   private filterUpdateSubscription: Subscription | undefined;
   private criteriaUpdateSubscription: Subscription | undefined;
   private conditionUpdateSubscription: Subscription | undefined;
@@ -109,8 +108,8 @@ export class FilterTableComponent implements OnInit {
     });
   }
 
-  normalDate(date: Date){
-    if(date == null){
+  normalDate(date: Date) {
+    if (date == null) {
       return null;
     }
     return moment(date).format('YYYY.MM.DD');
