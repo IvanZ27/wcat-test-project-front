@@ -36,7 +36,6 @@ export class FilterModalComponent implements OnInit, OnDestroy {
   ];
 
   private readonly filterNameControl = new FormControl(this.data.filter.filterName, Validators.required);
-  allConditions: ConditionModel[] = [];
 
   formArray = new FormArray([
     this.createFilterFormGroup()
@@ -63,25 +62,24 @@ export class FilterModalComponent implements OnInit, OnDestroy {
     this.valueChangesSubscription = this.addFilterForm.valueChanges.subscribe(x => {
       this.validateForm();
     });
-    this.allConditions = this.data.conditions.filter(activity => (activity.criteriaId == 1));
   }
 
   ngOnDestroy(): void {
     this.valueChangesSubscription?.unsubscribe();
   }
 
-  validateForm(): number[] {
+  validateForm(): void {
     this.isFormValid = !this.addFilterForm.invalid;
     if (!this.isFormValid) {
-      return [];
+      return;
     }
 
     const filterName = FilterModalComponent.filterNameFromFormGroup(this.addFilterForm);
     if (filterName == undefined) {
       this.isFormValid = false;
-      return [];
+      return;
     }
-    return [];
+    return;
   }
 
   private createFilterFormGroup(): FormGroup {
@@ -143,14 +141,14 @@ export class FilterModalComponent implements OnInit, OnDestroy {
     const filterName = FilterModalComponent.filterNameFromFormGroup(this.addFilterForm);
     const selection = FilterModalComponent.selectionNameFromFormGroup(this.addFilterForm);
 
-    for (let i = 0; i < this.formArrayControls.length; i++) {
-      const criteriaId = FilterModalComponent.criteriaIdFromFormGroup(this.formArrayControls[i]);
-      const conditionId = FilterModalComponent.conditionIdFromFormGroup(this.formArrayControls[i]);
-      const amountValue = FilterModalComponent.amountValueFromFormGroup(this.formArrayControls[i]);
-      const titleValue = FilterModalComponent.titleValueFromFormGroup(this.formArrayControls[i]);
-      const dateValue = FilterModalComponent.dateValueFromFormGroup(this.formArrayControls[i]);
-      const criteriaName = FilterModalComponent.criteriaNameFromFormGroup(this.formArrayControls[i]);
-      const conditionName = FilterModalComponent.conditionNameFromFormGroup(this.formArrayControls[i]);
+    for (var val of this.formArrayControls) {
+      const criteriaId = FilterModalComponent.criteriaIdFromFormGroup(val);
+      const conditionId = FilterModalComponent.conditionIdFromFormGroup(val);
+      const amountValue = FilterModalComponent.amountValueFromFormGroup(val);
+      const titleValue = FilterModalComponent.titleValueFromFormGroup(val);
+      const dateValue = FilterModalComponent.dateValueFromFormGroup(val);
+      const criteriaName = FilterModalComponent.criteriaNameFromFormGroup(val);
+      const conditionName = FilterModalComponent.conditionNameFromFormGroup(val);
 
       const filterModel: FilterModel = {
         filterName, criteriaId, criteriaName, conditionId,

@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTable} from "@angular/material/table";
 import {FilterModel} from "../../../models/FilterModel";
 import {FilterModelService} from "../../services/filter-model.service";
-import {Subscription} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {CriteriaModelService} from "../../services/criteria-model.service";
 import {CriteriaModel} from "../../../models/CriteriaModel";
 import {ConditionModel} from "../../../models/ConditionModel";
@@ -39,7 +39,7 @@ export class FilterTableComponent implements OnInit {
   ngOnInit(): void {
     this.allFilters = this.filterService.getData();
     this.criteria = this.criteriaService.getData();
-    this.conditions = this.conditionService.getData();
+    this.getConditionData();
 
     this.filterUpdateSubscription = this.filterService.dataUpdateSignal.subscribe(x => {
       this.allFilters = this.filterService.allFilters;
@@ -51,9 +51,6 @@ export class FilterTableComponent implements OnInit {
       this.criteria = this.criteriaService.criteria;
     });
 
-    this.conditionUpdateSubscription = this.conditionService.dataUpdateSignal.subscribe(x => {
-      this.conditions = this.conditionService.condition;
-    });
   }
 
   renderTable(): void {
@@ -99,7 +96,7 @@ export class FilterTableComponent implements OnInit {
 
   private openDialog(filter: FilterModel): void {
     const dialogRef = this.dialog.open(FilterModalComponent, {
-      data: {filter, filters: this.allFilters, conditions: this.conditions, criteria: this.criteria}
+      data: {filter: filter, conditions: this.conditions, criteria: this.criteria}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -113,6 +110,14 @@ export class FilterTableComponent implements OnInit {
       return null;
     }
     return moment(date).format('YYYY.MM.DD');
+  }
+
+  getConditionData() {
+    this.conditionService.getCondition().subscribe(condition => {
+      this.conditions = condition;
+      this.conditions.sort((a, b) => a.id != undefined && b.id != undefined
+        ? a.id - b.id : 0);
+    });
   }
 
 }

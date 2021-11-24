@@ -5,12 +5,6 @@ import {environment} from "../../environments/environment";
 import {CriteriaModel} from "../../models/CriteriaModel";
 
 
-// const httpOptions = {
-//   headers: new HttpHeaders({
-//     'Content-Type': 'application/json'
-//   })
-// };
-
 const criteriaUrl = `${environment.apiPath}/criteria`;
 
 @Injectable({
